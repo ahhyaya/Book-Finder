@@ -22,7 +22,7 @@ export const QUERY_SINGLE_USER = gql `
     }
 `;
 
-export const QUERY_ME = gql `
+export const QUERY_GET_ME = gql `
     query me {
         me {
          _id
