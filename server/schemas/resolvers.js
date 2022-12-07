@@ -4,13 +4,13 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
     Query: {
         // GET a single user by ID
-        user: async (parent, {userId}) => {
+        me: async (parent, {userId}) => {
             return User.findOne({ _id, userId });
         },
     },
     Mutation: {
         // CREATE a new user
-        createUser: async (parent, { username, email, password }) => {
+        addUser: async (parent, { username, email, password }) => {
             const user = await User.createUser({ username, email, password });
             if(!user) {
                 throw new AuthenticationError(`Something is wrong!`);
@@ -45,7 +45,7 @@ const resolvers = {
                 )
             };
         },
-        deleteBook: async (parent, { book }, context) => {
+        removeBook: async (parent, { book }, context) => {
             if(context.user) {
                 return User.findOneAndUpdate(
                     { _id:context.user._id },
