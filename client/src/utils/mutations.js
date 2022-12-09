@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Mutation } from '../../../server/schemas/resolvers';
+// import { Mutation } from '../server/schemas/resolvers';
 
 export const ADD_USER = gql `
 mutation addUser($username: String!, $email: String!, $password: String!) {
