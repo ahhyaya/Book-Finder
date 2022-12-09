@@ -12,14 +12,14 @@ import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
 
 const httplink = createHttpLink({
-  uri: 'graphql',
+  uri: '/graphql',
 });
 
-const authLink = setContext ((_, { headers }) => {
+const authLink = setContext ((_, { Navbar }) => {
   const token = localStorage.getItem('id_token');
   return {
-    headers: {
-      ...headers,
+    Navbar: {
+      ...Navbar,
       authorization: token? `Bearer ${token}` : '',
     },
   };
