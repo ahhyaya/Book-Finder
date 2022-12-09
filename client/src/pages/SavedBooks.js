@@ -4,6 +4,7 @@ import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
+import { useParams  } from 'react-router-dom';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
@@ -11,30 +12,50 @@ const SavedBooks = () => {
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
+  //r
+  const User = () => {
+    const { username: userParam } = useParams();
+    const { loding, data } = useQuery(userParam ? 
+      QUERY_USER : QUERY_ME, {
+        variables: { username: userParam },
+      });
+    const user = data?.me || data?.user || {};
+    if(Auth.loggedIn() && Auth.getMe().data.
+    username === userParam) {
+      return <Navigate to="/me" />;
+    }
+    if(loading) {
+      return <div>Loading...</div>;
+    }
+    if(!user?.username) {
+      return (`something went wrong!`);
+    }
+  }
 
-        if (!token) {
-          return false;
-        }
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-        const response = await getMe(token);
+  //       if (!token) {
+  //         return false;
+  //       }
 
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
+  //       const response = await getMe(token);
 
-        const user = await response.json();
-        setUserData(user);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  //       if (!response.ok) {
+  //         throw new Error('something went wrong!');
+  //       }
 
-    getUserData();
-  }, [userDataLength]);
+  //       const user = await response.json();
+  //       setUserData(user);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+    getMe();
+  }, [userDataLength];
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -45,19 +66,24 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      const { data } = await removeBookId({
+        variables: { ...userData },
+      })
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+  
+      // const response = await deleteBook(bookId, token);
 
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
-    } catch (err) {
-      console.error(err);
-    }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
+
+      // const updatedUser = await response.json();
+      // setUserData(updatedUser);
+    //   // upon success, remove book's id from localStorage
+    //   removeBookId(bookId);
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
 
   // if data isn't here yet, say so
