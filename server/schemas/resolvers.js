@@ -7,7 +7,7 @@ const resolvers = {
     // GET a single user by ID
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id }).select('-__v-password');
+        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password');
         return userData;
       }
       throw new AuthenticationError("You need to be logged in!");
@@ -24,7 +24,7 @@ const resolvers = {
       return { token, user };
     },
     // user login
-    login: async (parent, { username, email }) => {
+    login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -46,7 +46,7 @@ const resolvers = {
         const updateUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $push: { savedBooks:  newBook  } },
-          { new: true, runValidators: true }
+          { new: true }
         );
         return updateUser;
       }
