@@ -41,24 +41,26 @@ const resolvers = {
       return { token, user };
     },
     // save book to a user's savedbooks field
-    saveBook: async (parent, { newBook }, context) => {
+    saveBook: async (parent, { bookData }, context) => {
       if (context.user) {
-        const updateUser = await User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $push: { savedBooks:  newBook  } },
+          { $push: { savedBooks:  bookData  } },
           { new: true }
         );
-        return updateUser;
+        return updatedUser;
       }
+      throw new AuthenticationError('You need to be logged in!');
     },
 
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        return User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $pull: { savedBooks: { bookId} } },
           { new: true }
         );
+        return updatedUser;
       }
       throw new AuthenticationError(`Couldn't find user with this id!`);
     },
