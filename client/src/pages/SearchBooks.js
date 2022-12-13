@@ -7,7 +7,7 @@ import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 // R: use useMutation hook
 import { useMutation } from '@apollo/client';
-// import { useParam } from 'react-router-dom'
+// import { useParams } from 'react-router-dom';
 import { SAVE_BOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
@@ -65,7 +65,7 @@ const SearchBooks = () => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
 
     //r
-    // const { bookId } = useParam();
+    // const { bookId } = useParams();
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -79,7 +79,7 @@ const SearchBooks = () => {
        { variables: { bookData: { ...bookToSave }}}
         );
 
-
+        console.log(savedBookIds)
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {

@@ -42,6 +42,7 @@ const LoginForm = () => {
       const { data } = await login({
         variables: { ...userFormData },
       });
+      console.log(data)
       Auth.login(data.login.token);
     } catch (e) {
       console.error(e);
@@ -86,7 +87,7 @@ const LoginForm = () => {
             value={userFormData.email}
             required
           />
-          <Form.Control.Feedback type="invalid">
+          <Form.Control.Feedback type="invalid" name='invalid'>
             Email is required!
           </Form.Control.Feedback>
         </Form.Group>
@@ -101,7 +102,7 @@ const LoginForm = () => {
             value={userFormData.password}
             required
           />
-          <Form.Control.Feedback type="invalid">
+          <Form.Control.Feedback type="invalid" name='invalid'>
             Password is required!
           </Form.Control.Feedback>
         </Form.Group>
